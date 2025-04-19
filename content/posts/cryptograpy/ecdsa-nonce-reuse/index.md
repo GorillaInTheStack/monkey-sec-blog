@@ -16,7 +16,7 @@ toc:
 Back when PS3 came out, Sony decided to not support linux homebrew on their machines.
 So in order to do so, they devised some secure boot setup where they signed "approved"
 software and firmware. It was all nice and dandy until a group of our fellow nerds from
-the jungle released the fellas from Sony who were using ECDSA to sign their stuff were
+the jungle realized the fellas from Sony who were using ECDSA to sign their stuff were
 using a *static* nonce for the algorithm. This is a big no no for ECDSA and it's probably
 one of the first things you learn about when studying ECDSA.
 
