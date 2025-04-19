@@ -16,3 +16,4 @@ services:
       --disableFastRender
       --poll 700ms
       --cleanDestinationDir
+      -e production
