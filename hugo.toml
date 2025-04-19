@@ -342,7 +342,7 @@ shortname = ""
 # DoIt NEW | 0.1.1
 enable = true
 owner = "GorillaInTheStack"
-repo = "https://github.com/GorillaInTheStack/monkey-sec-blog"
+repo = "blog-comments"
 clientId = ""
 clientSecret = ""
 
