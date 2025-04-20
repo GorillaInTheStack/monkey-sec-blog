@@ -5,6 +5,7 @@ date: 2025-04-13
 description: "We discuss the asymmetric signature algorithm ECDSA and its nonce reuse flaw that led to Sony's PS3 getting pwned."
 tags: ["ECDSA", "PKI", "bitcoin", "nonce", "vulnerability", "code"]
 categories: ["Cryptography"]
+authors: ["Sam"]
 draft: false
 toc:
   enable: true
@@ -25,7 +26,7 @@ In this post we will explain why is this a no no, and we will show how it can be
 ## What is ECDSA?
 
 The [Elliptic Curve Digital Signature Algorithm (ECDSA)](https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm) is wildly used on the web for a variety of protocols and in different use cases.
-It's a asymmetric signature algorithm so naturally it uses a key pair, A *public
+It's an asymmetric signature algorithm so naturally it uses a key pair, A *public
 key* noted as **PK** and a *private key* noted as **SK** (for secret key, because
 it is supposed to be secret 🧠)
 
@@ -38,8 +39,8 @@ high-school level mathematics. You can check out the wiki page to learn more
 about [elliptic curves over finite fields](https://en.wikipedia.org/wiki/Elliptic_curve#Algorithms_that_use_elliptic_curves) and how they create a system that
 is used to create cryptographic algorithms with elliptic curve arithmetics.
 
-What is important for us (programmers) is to know how this algorithm work
-on a high level and what is it about it that makes it secure.
+What is important for us (programmers) is to know how this algorithm works
+on a high level. Additionally, to know what is it about it that makes it secure.
 
 Let's take a look at how this algorithm function with two participants
 involved. Take a look at the following diagram.
@@ -509,7 +510,7 @@ Everybody will verify with her public key and will think everything
 is coming from her.
 
 The actual impact of this problem depends on what protocol this
-algorithm is used in. List explore some:
+algorithm is used in. Let's explore some:
 
 - If Alice is signing her bitcoin transactions with this key, attacker can steal her money.
 - If Alice is signing her firmware with this key in order to combat piracy, the pirates will sign their stuff too now.

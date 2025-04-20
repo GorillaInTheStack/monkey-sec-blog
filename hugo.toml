@@ -3,7 +3,7 @@ baseURL = "https://blog.securitymonkeys.org"
 defaultContentLanguage = "en"
 # language code
 languageCode = "en"
-title = "Monkey Jungle"
+title = "🐵🍌🌵"
 dateFormat = "2006-01-02"
 # Change the default theme to be use when building the site with Hugo
 theme = "DoIt"
@@ -33,12 +33,12 @@ keywords = [
 ]
 license = '<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a>'
 
-[params.author]
-name = "Sam"
-email = "sam66ish.eng+blog@gmail.com"
-link = "https://github.com/GorillaInTheStack"
-avatar = "/images/gorilla.webp"
-gravatarEmail = ""
+#[params.author]
+#name = "Sam"
+#email = "sam66ish.eng+blog@gmail.com"
+#link = "https://github.com/GorillaInTheStack"
+#avatar = "/images/gorilla.webp"
+#gravatarEmail = ""
 
 # Home page config
 [params.home]
