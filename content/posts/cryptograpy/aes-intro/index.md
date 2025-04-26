@@ -4,7 +4,7 @@ subtitle: "A first step to abusing AES"
 date: 2025-04-26
 description: "The start of a series on AES that will cover the theory behind AES and will explain some attacks that could be used against certain modes of AES."
 tags: ["AES", "symmetric", "encryption", "theory", "padding", "PKCS#7"]
-cateories: ["Cryptography"]
+categories: ["Cryptography"]
 authors: ["Sam"]
 series: ["Abusing AES"]
 draft: false
@@ -188,3 +188,5 @@ We introduced both AES and the padding scheme it uses. Next, we will start looki
 AES a cryptosystem. We will also look into what type of problems they create and how to exploit them.
 
 Stay tuned for the next post in the series where we explain the Electronic Code Book (ECB) mode and how messed up it is.
+
+![Funnie memes](./meme.jpg)
