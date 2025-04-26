@@ -415,6 +415,15 @@ name = "Categories"
 url = "/categories/"
 title = ""
 weight = 3
+[[menu.main]]
+identifier = "series"
+pre = ""
+post = ""
+name = "Series"
+url = "/series/"
+title = ""
+weight = 4
+
 
 # Markup related config in Hugo
 [markup]
