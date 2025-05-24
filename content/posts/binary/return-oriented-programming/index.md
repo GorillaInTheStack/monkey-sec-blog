@@ -37,7 +37,9 @@ Memory here by the way, is main memory. Also known as RAM. This is the memory th
 
 So this layout, is the same for every binary. Every binary has its own isolated memory layout. Every binary thinks its
 the only thing running on the operating system. This is called *process isolation*.
-Note that a process here means a program that is now living in memory.
+
+>[!NOTE]
+> A process here means a program that is now living in memory.
 
 - Binary -> A file that describes a program. This file is on disk and is not running.
 - Process -> A program that is now loaded into memory and is running or about to run.
@@ -47,7 +49,7 @@ There is of course a little more to it but we don't need to worry about none of 
 Let's go through this image step by step from the bottom to the top.
 
 - text segment: also known as the code segment. This is where the *code* of the binary is stored.
-It is a read-only part of memory. The CPU uses this part to know what to do to get this binary going.
+It is *usually* a read-only part of memory. The CPU uses this part to know what to do to get this binary going.
 - data segment: This is where your *initialized* global variables, static variables, constants and such. Initialized here means it starts with a value.
 An example:
 
@@ -55,13 +57,16 @@ An example:
 static int a = 5;
 ```
 
-- BSS segment: Same as above but the variables here are the ones that are *not initialized*. They don't start with a value.
+- BSS segment: Same as above but the variables here are the ones that are *not initialized* by the programmer. They don't start with a value *theortically*. In reality, they all get initialized to zero by the OS when the binary is loaded into memory.
 
 ```C
 static int a;
 ```
 
-- heap segment: This place is used for *dynamic memory allocation*. In other words, this is where memory space gets reserved for variables that are created at runtime (read during execution). In C, this is done with functions like `malloc`, `calloc`, `realloc` and the memory gets released with `free`. Something to note about the heap is that it grows upwards. This means that when we allocate memory, it will grow towards the higher addresses in memory. You don't need to worry too much about this right now.
+- heap segment: This place is used for *dynamic memory allocation*. In other words, this is where memory space gets reserved for variables that are created at runtime (read during execution). In C, this is done with functions like `malloc`, `calloc`, `realloc` and the memory gets released with `free`.
+
+>[!NOTE]
+> The heap grows upwards. This means that when we allocate memory, it will grow towards the higher addresses in memory. You don't need to worry too much about this right now.
 
 ```C
 int *a = malloc(sizeof(int) * 10);
@@ -109,7 +114,10 @@ Good question, in the x86_64 architecture, the first 6 arguments of a function a
 
 As part of the called function [prologue](https://en.wikipedia.org/wiki/Function_prologue_and_epilogue), it will fetch the values from the registers and store them in its stack frame between the `rbp` and the `rsp` pointers.
 
-When it comes to the pointers (the addresses) on the stack frame, the calling function will pull its address which will be used to return to it. It will place it just above the `rbp` as you see above in the image.
+When it comes to the pointers (the addresses) on the stack frame, the calling function will put its address which will be used to return to it. It will place it just above the `rbp` as you see above in the image. The `rbp` of this stack frame itself is pointing to the previous stack frame's `rbp` value which gets pushed into the stack during the current function prologue.
+
+>[!NOTE]
+> Functions return values are returned to the caller by putting them in the `rax / eax` registers. The caller then takes them out when the execution returns to it.
 
 This is about enough initial info to start causing havoc moving on. If you're interested in the topic, check this post for more details on how x86_64 stack works: [x86_64 stack frame](https://eli.thegreenplace.net/2011/09/06/stack-frame-layout-on-x86-64).
 
@@ -185,8 +193,11 @@ Here is the x86_64 stack frames for these two functions:
 Yellow is `add` stack frame, blue is `main` stack frame and red is the runtime stack frame.
 
 You can look up the assembly code with a disassembler like `objdump` or `gdb`. I used `gdb` with pwndbg.
-Note that the e-prefixed registers are part of the r-prefixed registers.
+
+>[!NOTE]
+> The e-prefixed registers are part of the r-prefixed registers.
 `EBP` $\subset$ `RBP`, `EAX` $\subset$ `RAX`, etc. The E registers are the lower 32 bits of the R registers.
+When they are overwritten in a x64 machine, the higher bits are set to 0.
 
 ### 32bit version
 
@@ -240,7 +251,8 @@ And here is the x86_32 stack frame for these same two functions:
 ![Stack frames of main and add in 32bit](astack-frame-32bit.png)
 
 Yellow is `add` stack frame, blue is `main` stack frame and red is the runtime stack frame.
-Note that the 32bit version fetches the arguments directly to registers and starts working with them.
+>[!NOTE]
+> The 32bit version fetches the arguments directly to registers and starts working with them.
 It didn't copy the values down the stack like the 64bit version did.
 
 ## That's *call* folks
