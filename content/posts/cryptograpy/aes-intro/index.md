@@ -1,5 +1,5 @@
 ---
-title: "Part 1: An introduction to AES"
+title: "AES: Advance Encruption Standard"
 subtitle: "A first step to abusing AES"
 date: 2025-04-26
 description: "The start of a series on AES that will cover the theory behind AES and will explain some attacks that could be used against certain modes of AES."
@@ -9,6 +9,7 @@ authors: ["Sam"]
 series: ["Abusing AES"]
 draft: false
 ---
+
 <!--more-->
 
 This is a start of a new series where we go through a symmetric encryption algorithm called AES and related concepts.
@@ -58,8 +59,8 @@ AES is essentially an instance or an implementation of this class. There exist o
 ## AES
 
 AES stands for Advanced Encryption Standard. It is an algorithm that won a NIST standardization process that ended some time in 2001.
-Since then, there has been no known *practical* attacks against AES. You might be wondering what are we yapping about then?
-Well, The algorithm itself does not have any known attacks, but some AES *cryptosystems* do.
+Since then, there has been no known _practical_ attacks against AES. You might be wondering what are we yapping about then?
+Well, The algorithm itself does not have any known attacks, but some AES _cryptosystems_ do.
 We will define what exactly is a cryptosystem in a minute. Let's first define AES itself.
 
 AES is an algorithm that requires two inputs and gives out one output.
@@ -67,9 +68,9 @@ Inputs:
 
 - A key of size 128, 192, or 256 bits. This has to be unpredictable, uniformly random and secret.
 - Your input, also known as plaintext. It has to be exactly 128 bits long or AES will not guarantee security.
-Outputs:
+  Outputs:
 - The encrypted data, also known as a ciphertext. It is exactly 128 bits long and it is supposed to be
-indistinguishable from random gibberish data.
+  indistinguishable from random gibberish data.
 
 If you give AES what it wants, it can guarantee you an upper bound of 128 bits of security for the 128 bit key.
 
@@ -91,7 +92,7 @@ flowchart LR
 > 128 bits of security means that an attacker would need to try $2^{128}$ different possible keys
 > for a brute force attack. There are optimized algorithms that reduce the bits of security,
 > but it's still a huge number of possibilities to try so it does not affect the security of AES in practice.
-> There are attacks on AES that utilizes a small number of *rounds*. We will discuss rounds in a minute.
+> There are attacks on AES that utilizes a small number of _rounds_. We will discuss rounds in a minute.
 
 > [!NOTE]
 > To put it in perspective, $2^{128}$ is a number with 39 digits. It can be written in words as:
@@ -120,9 +121,9 @@ AES treats its 128 bits of input as a 4x4 table of bytes where each block in the
 ![AES input block](./aes-input-block.png)
 
 The key is seen in a similar way too.
-This is why AES is called a *block cipher*. It takes in a block and transforms it into another block.
+This is why AES is called a _block cipher_. It takes in a block and transforms it into another block.
 
-AES takes this input table through several rounds of transformations called *rounds*.
+AES takes this input table through several rounds of transformations called _rounds_.
 
 ![AES rounds](./aes-round-funcs.png)
 
@@ -161,7 +162,7 @@ The round key is a key that is derived from the original input key. AES creates 
 
 Now if the input is larger than 128 bits, the strategy to encrypt it with AES is to split it down to several blocks of 16 bytes such as above.
 This means that the input length needs to be a multiple of 16 in order to have full blocks.
-This length limitation is not great, so to solve this issue, we simply *pad* inputs that end up with the last block being less than 16 bytes.
+This length limitation is not great, so to solve this issue, we simply _pad_ inputs that end up with the last block being less than 16 bytes.
 
 ## Padding
 

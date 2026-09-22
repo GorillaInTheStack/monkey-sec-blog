@@ -1,5 +1,5 @@
 ---
-title: "Part 1: Intro to fiddling with binaries"
+title: "Fiddling with binaries"
 subtitle: "Deep in the trenches of 0s and 1s"
 date: 2025-04-28
 description: "This is a start of a series where we will go learn binary exploitation. We will start with explaining some basics to get everyone up to speed."
@@ -9,11 +9,12 @@ authors: ["Sam"]
 series: ["Busting the stack"]
 draft: false
 ---
+
 <!--more-->
 
 Welcome home. In this series, we will go on a tour in the realm of binary exploitation. We will start with the basics and some
 essential concepts for this to be a success for everyone. If you are already familiar with what you see in the table of contents,
-jump to the next post (*hopefully I wrote it already :D*).
+jump to the next post (_hopefully I wrote it already :D_).
 
 ## The plan
 
@@ -36,9 +37,9 @@ Memory here by the way, is main memory. Also known as RAM. This is the memory th
 [Layout straight out of Wikipedia](https://en.wikipedia.org/wiki/Data_segment)
 
 So this layout, is the same for every binary. Every binary has its own isolated memory layout. Every binary thinks its
-the only thing running on the operating system. This is called *process isolation*.
+the only thing running on the operating system. This is called _process isolation_.
 
->[!NOTE]
+> [!NOTE]
 > A process here means a program that is now living in memory.
 
 - Binary -> A file that describes a program. This file is on disk and is not running.
@@ -48,24 +49,24 @@ There is of course a little more to it but we don't need to worry about none of 
 
 Let's go through this image step by step from the bottom to the top.
 
-- text segment: also known as the code segment. This is where the *code* of the binary is stored.
-It is *usually* a read-only part of memory. The CPU uses this part to know what to do to get this binary going.
-- data segment: This is where your *initialized* global variables, static variables, constants and such. Initialized here means it starts with a value.
-An example:
+- text segment: also known as the code segment. This is where the _code_ of the binary is stored.
+  It is _usually_ a read-only part of memory. The CPU uses this part to know what to do to get this binary going.
+- data segment: This is where your _initialized_ global variables, static variables, constants and such. Initialized here means it starts with a value.
+  An example:
 
 ```C
 static int a = 5;
 ```
 
-- BSS segment: Same as above but the variables here are the ones that are *not initialized* by the programmer. They don't start with a value *theortically*. In reality, they all get initialized to zero by the OS when the binary is loaded into memory.
+- BSS segment: Same as above but the variables here are the ones that are _not initialized_ by the programmer. They don't start with a value _theortically_. In reality, they all get initialized to zero by the OS when the binary is loaded into memory.
 
 ```C
 static int a;
 ```
 
-- heap segment: This place is used for *dynamic memory allocation*. In other words, this is where memory space gets reserved for variables that are created at runtime (read during execution). In C, this is done with functions like `malloc`, `calloc`, `realloc` and the memory gets released with `free`.
+- heap segment: This place is used for _dynamic memory allocation_. In other words, this is where memory space gets reserved for variables that are created at runtime (read during execution). In C, this is done with functions like `malloc`, `calloc`, `realloc` and the memory gets released with `free`.
 
->[!NOTE]
+> [!NOTE]
 > The heap grows upwards. This means that when we allocate memory, it will grow towards the higher addresses in memory. You don't need to worry too much about this right now.
 
 ```C
@@ -75,7 +76,7 @@ int *a = malloc(sizeof(int) * 10);
 ```
 
 - stack segment: The main dish for our topic. This segment store all kinds of things. It is used for function local variables, function arguments, return addresses and such.
-It represent a *state* of the running process. It helps the CPU keep track of what is going on right now and where things are. In other words, it helps the CPU keep track of the execution *context*.
+  It represent a _state_ of the running process. It helps the CPU keep track of what is going on right now and where things are. In other words, it helps the CPU keep track of the execution _context_.
 
 ```C
 void hello(int arg1, int arg2){
@@ -90,7 +91,7 @@ void hello(int arg1, int arg2){
 ## The stack
 
 Let's zoom in onto this stack segment we just mentioned. This is going to be the stage of many of our attacks.
-There is a concept called the *stack frame*. It is a small region of the stack
+There is a concept called the _stack frame_. It is a small region of the stack
 where the variables and other values of a function are stored together. It is used by the
 CPU in order to keep track of function calls, return addresses, local variables and such.
 Each function has its own stack frame. This frame is created when the function is called and
@@ -110,13 +111,13 @@ In other words, the base pointer is an address the CPU uses to know where the st
 
 ### How does this frame get the values?
 
-Good question, in the x86_64 architecture, the first 6 arguments of a function are passed through the registers `rdi, rsi, rdx, rcx, r8, and r9`. This means that before a function calls another function,  it will put the arguments it wants to pass in these registers in the correct order. The called function will then set up its stack frame and retrieve these arguments from the registers. If there are more than 6 arguments, the calling function will push the additional arguments directly into the stack before calling the function.
+Good question, in the x86_64 architecture, the first 6 arguments of a function are passed through the registers `rdi, rsi, rdx, rcx, r8, and r9`. This means that before a function calls another function, it will put the arguments it wants to pass in these registers in the correct order. The called function will then set up its stack frame and retrieve these arguments from the registers. If there are more than 6 arguments, the calling function will push the additional arguments directly into the stack before calling the function.
 
 As part of the called function [prologue](https://en.wikipedia.org/wiki/Function_prologue_and_epilogue), it will fetch the values from the registers and store them in its stack frame between the `rbp` and the `rsp` pointers.
 
 When it comes to the pointers (the addresses) on the stack frame, the calling function will put its address which will be used to return to it. It will place it just above the `rbp` as you see above in the image. The `rbp` of this stack frame itself is pointing to the previous stack frame's `rbp` value which gets pushed into the stack during the current function prologue.
 
->[!NOTE]
+> [!NOTE]
 > Functions return values are returned to the caller by putting them in the `rax / eax` registers. The caller then takes them out when the execution returns to it.
 
 This is about enough initial info to start causing havoc moving on. If you're interested in the topic, check this post for more details on how x86_64 stack works: [x86_64 stack frame](https://eli.thegreenplace.net/2011/09/06/stack-frame-layout-on-x86-64).
@@ -194,10 +195,10 @@ Yellow is `add` stack frame, blue is `main` stack frame and red is the runtime s
 
 You can look up the assembly code with a disassembler like `objdump` or `gdb`. I used `gdb` with pwndbg.
 
->[!NOTE]
+> [!NOTE]
 > The e-prefixed registers are part of the r-prefixed registers.
-`EBP` $\subset$ `RBP`, `EAX` $\subset$ `RAX`, etc. The E registers are the lower 32 bits of the R registers.
-When they are overwritten in a x64 machine, the higher bits are set to 0.
+> `EBP` $\subset$ `RBP`, `EAX` $\subset$ `RAX`, etc. The E registers are the lower 32 bits of the R registers.
+> When they are overwritten in a x64 machine, the higher bits are set to 0.
 
 ### 32bit version
 
@@ -251,10 +252,11 @@ And here is the x86_32 stack frame for these same two functions:
 ![Stack frames of main and add in 32bit](astack-frame-32bit.png)
 
 Yellow is `add` stack frame, blue is `main` stack frame and red is the runtime stack frame.
->[!NOTE]
-> The 32bit version fetches the arguments directly to registers and starts working with them.
-It didn't copy the values down the stack like the 64bit version did.
 
-## That's *call* folks
+> [!NOTE]
+> The 32bit version fetches the arguments directly to registers and starts working with them.
+> It didn't copy the values down the stack like the 64bit version did.
+
+## That's _call_ folks
 
 This should be enough to get us started smashing the stack. We will go through many scenarios so these things will become familiar very quickly. It will be beneficial to have some basic understanding of assembly and `C` but you can definitely learn as you go.
